@@ -12,8 +12,16 @@ require dirname(__FILE__).'/../lib/rb.php';
 
 //let's grab a DB through ORM tool redbean
 if (array_key_exists('DATABASE_URL', $_ENV)) {
-    $databaseUrl = $_ENV['DATABASE_URL'];$parser = new DatabaseUrlParser();
+    //running in CF
+    $databaseUrl = $_ENV['DATABASE_URL'];
+    $parser = new DatabaseUrlParser();
     $parsedUrl = $parser->toRedBean($databaseUrl);
+    R::setup($parsedUrl['connection'], $parsedUrl['user'], $parsedUrl['pass']);
+} else if (file_exists(dirname(__FILE__)."/../dbconfig.php")) {
+    require dirname(__FILE__)."/../dbconfig.php";
+    $parser = new DatabaseUrlParser();
+    $parsedUrl = $parser->toRedBean($databaseUrl);
+    var_dump($parsedUrl);die();
     R::setup($parsedUrl['connection'], $parsedUrl['user'], $parsedUrl['pass']);
 } else {
    error_log("NO DATABASE_URL defined by environment - running in DEVMODE with local DB");	
