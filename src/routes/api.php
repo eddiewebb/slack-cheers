@@ -51,6 +51,10 @@ $app->group('/api', function () use ($app) {
              $response->response_type = "in_channel";
 
              foreach($arguments->peers as $mention){
+                if(strpos($mention, '@') === false){
+                    //TODO: Use lookup with slack to validate user and get name.
+                    continue;
+                }
                 $peerName = str_replace('@', '', $mention);
                 if( $peerName == $fromHandle ){
                     slackError($app,"Way to recognize yourself. No points awarded.");
@@ -98,7 +102,7 @@ function parseArguments($text){
     }else{
         $arguments->reason = "Being Awesome";
     }
-    $arguments->peers = explode(" ", $tokens[0]);
+    $arguments->peers = explode(" ", trim($tokens[0]));
     return $arguments;
 }
 
