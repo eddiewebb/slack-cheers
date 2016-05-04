@@ -46,6 +46,10 @@ $app->group('/api', function () use ($app) {
                 $arguments = parseArguments($text);
              }
 
+
+             $response = new stdClass();
+             $response->response_type = "in_channel";
+
              foreach($arguments->peers as $mention){
                 $peerName = str_replace('@', '', $mention);
                 if( $peerName == $fromHandle ){
@@ -64,13 +68,13 @@ $app->group('/api', function () use ($app) {
                 $suds->from = $fromId;
                 $peer->ownSudsList[] = $suds; 
                 R::store($peer);
+
+
+                 $detail = new stdClass();
+                 $detail->text = "Way to go " . $mention . " for: " . $arguments->reason;
+                 $response->attachments[] = $detail;
              }
 
-             $response = new stdClass();
-             $response->response_type = "in_channel";
-             $detail = new stdClass();
-             $detail->text = "We've recorded the suds";
-             $response->attachments[] = $detail;
 
 
 
