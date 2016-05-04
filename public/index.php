@@ -21,7 +21,6 @@ if (array_key_exists('DATABASE_URL', $_ENV)) {
     require dirname(__FILE__)."/../dbconfig.php";
     $parser = new DatabaseUrlParser();
     $parsedUrl = $parser->toRedBean($databaseUrl);
-    var_dump($parsedUrl);die();
     R::setup($parsedUrl['connection'], $parsedUrl['user'], $parsedUrl['pass']);
 } else {
    error_log("NO DATABASE_URL defined by environment - running in DEVMODE with local DB");	
@@ -66,5 +65,7 @@ $app->notFound(function () use ($app) {
 });
 
 $app->run();
+
+R::close();
 
 ?>

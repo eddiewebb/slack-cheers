@@ -36,6 +36,14 @@ Pretty limited, hit /reports to see details for the team.
    |-vendor (managed by Composer, do not modify!)
 ```
 
+#First RUn (using composer)
+This project contains a composer.json file, you will need to run composer to get all the required libraries.
+See https://getcomposer.org/download/  OR
+
+```
+wget https://getcomposer.org/download/1.0.3/composer.phar
+php -d extension=phar.so composer.phar install
+```
 
 ## Special FIles
 
