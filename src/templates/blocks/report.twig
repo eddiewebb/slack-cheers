@@ -1,0 +1,25 @@
+{% extends 'base.twig' %}
+
+
+{% block title %}Checkin Report{% endblock %}
+
+
+{% block content %}
+  <h3>Peers and Cheers</h3>
+   <table><thead>
+      <tr><th>Peer Name</th><th>Suds Count</th></tr> </thead>               
+      {% for team in teams %}                
+            <tr><td>{{team.name}}</td><td>{{team.countOwn('sud')}}</td></tr>
+      {% endfor %}                
+    </table>
+
+  <hr>
+
+{% endblock %}
+
+
+
+
+
+       
+
