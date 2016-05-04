@@ -13,6 +13,7 @@ $app->group('/api', function () use ($app) {
         $app->get('/', function() use ($app){
              $peers = R::find('peer');
              $json = json_encode(R::exportAll($peers));
+             $app->response->headers->set('Content-Type', 'application/json');
              echo '{"peers":'.$json.'}';
         });
 
@@ -21,6 +22,7 @@ $app->group('/api', function () use ($app) {
             $peer = R::load('peer',$id);
             if($peer->id){
                 $json = json_encode(R::exportAll($peer));
+                $app->response->headers->set('Content-Type', 'application/json');
                 echo $json;
             }else{
                  $app->notFound();
@@ -73,6 +75,7 @@ $app->group('/api', function () use ($app) {
 
 
              $json = json_encode($response);
+             $app->response->headers->set('Content-Type', 'application/json');
              echo $json;
 
 
@@ -102,7 +105,7 @@ function findIdForHandle($handle){
 
 function slackError($app,$message){
     $response='{"text":  "Whoops: ' . $message . '"}';
-    header('Content-Type: application/json');
+    $app->response->headers->set('Content-Type', 'application/json');
     echo $response;
     die();
 }
