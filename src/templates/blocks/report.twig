@@ -7,9 +7,9 @@
 {% block content %}
   <h3>Peers and Cheers</h3>
    <table><thead>
-      <tr><th>Peer Name</th><th>Suds Count</th></tr> </thead>               
-      {% for team in teams %}                
-            <tr><td>{{team.name}}</td><td>{{team.countOwn('sud')}}</td></tr>
+      <tr><th>Peer ID</th><th>Peer Handle</th><th>Suds Count</th></tr> </thead>               
+      {% for peer in peers %}                
+            <tr><td><a href="{{ urlFor('api.user',{'id':peer.id}) }}">{{peer.user_id}}</a></td><td>{{peer.handle}}</td><td>{{peer.countOwn('sud')}}</td></tr>
       {% endfor %}                
     </table>
 

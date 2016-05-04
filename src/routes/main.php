@@ -5,14 +5,13 @@
 */
 
 $app->get('/', function() use ($app) {
-    $teams = R::find('team');
-    $app->render("blocks/home.twig",array("teams"=>$teams));
+    $app->render("blocks/home.twig");
 })->name('home');
 
 
 $app->get('/report', function() use ($app) {
-    $teams = R::find('peer');
-    $app->render("blocks/report.twig",array("teams"=>$teams));
+    $peers = R::find('peer');
+    $app->render("blocks/report.twig",array("peers"=>$peers));
 })->name('report');
 
 
@@ -45,9 +44,11 @@ $app->get('/nuke', function() use ($app) {
     R::nuke(); // blows up existing DB
 
     $team = R::dispense('peer');
-    $team->name="eddie.webb";
+    $team->user_id="U123";
+    $team->handle="eddie.webb";
     $suds = R::dispense('sud');
     $suds->reason="Being Awesome";
+    $suds->from="U234";
     $team->ownSudsList[] = $suds;    
     $id = R::store($team);
 
@@ -56,12 +57,15 @@ $app->get('/nuke', function() use ($app) {
 
 
     $team = R::dispense('peer');
-    $team->name="ali.ren";
+    $team->user_id="U234";
+    $team->handle="ali.ren";
     $suds = R::dispense('sud');
     $suds->reason="Being Awesome";
+    $suds->from="U123";
     $team->ownSudsList[] = $suds; 
     $suds = R::dispense('sud');
     $suds->reason="Being Awesome";
+    $suds->from="U123";
     $team->ownSudsList[] = $suds; 
     $id = R::store($team);
 
