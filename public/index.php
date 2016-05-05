@@ -9,6 +9,7 @@
 require dirname(__FILE__).'/../src/DatabaseUrlParser.php';
 require dirname(__FILE__).'/../vendor/autoload.php';
 require dirname(__FILE__).'/../lib/rb.php';
+require dirname(__FILE__).'/../src/models/repositories/RedBeanPeerRepository.php';
 
 //let's grab a DB through ORM tool redbean
 if (array_key_exists('DATABASE_URL', $_ENV)) {
@@ -27,6 +28,7 @@ if (array_key_exists('DATABASE_URL', $_ENV)) {
     R::setup();
 }
 
+$peerRepo = new RedBeanPeerRepository();
 
 
 //initialize slim and configure to use Twig for rendering

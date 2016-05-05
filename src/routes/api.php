@@ -5,23 +5,23 @@
 */
 
 // a group  makes the url /api/* for the nested methods
-$app->group('/api', function () use ($app) {
+$app->group('/api', function () use ($app, $peerRepo) {
 
-    $app->group('/peers', function () use ($app) {
+    $app->group('/peers', function () use ($app, $peerRepo) {
 
         // get listing of all peer
-        $app->get('/', function() use ($app){
-             $peers = R::find('peer');
-             $json = json_encode(R::exportAll($peers));
+        $app->get('/', function() use ($app, $peerRepo){
+             $peers = $peerRepo->findAll();
+             $json = $peerRepo->asJson($peers);
              $app->response->headers->set('Content-Type', 'application/json');
              echo '{"peers":'.$json.'}';
         });
 
-        // get listing of all peer
-        $app->get('/:id', function($id) use ($app){
-            $peer = R::load('peer',$id);
+        
+        $app->get('/:id', function($id) use ($app, $peerRepo){
+            $peer = $peerRepo->find($id);
             if($peer->id){
-                $json = json_encode(R::exportAll($peer));
+                $json = $peerRepo->asJson($peer);
                 $app->response->headers->set('Content-Type', 'application/json');
                 echo $json;
             }else{
