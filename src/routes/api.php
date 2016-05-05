@@ -77,6 +77,7 @@ $app->group('/api', function () use ($app) {
                  $detail = new stdClass();
                  $detail->text = "Way to go " . $mention . " for: " . $arguments->reason;
                  $response->attachments[] = $detail;
+                 $response->text = "See " . $app->request->getUrl() . $app->urlFor('report') . " report for full details.";
              }
 
 
