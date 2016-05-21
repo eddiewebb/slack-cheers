@@ -42,7 +42,7 @@ $app = new \Slim\Slim(array(
 $view = $app->view();
 $view->parserOptions = array(
     'debug' => true,
-    'cache' =>  '/tmp/cache'
+    //'cache' =>  '/tmp/cache'
 );
 $view->parserExtensions = array(
     new \Slim\Views\TwigExtension()
