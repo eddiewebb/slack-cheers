@@ -35,8 +35,7 @@ $app->get('/nuke', function() use ($app) {
 
 
     R::store($peer);
-    R::wipe( 'cheer' );
-    R::wipe( 'peer' );
+    R::wipe( );
 
 
 
