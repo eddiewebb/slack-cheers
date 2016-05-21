@@ -20,31 +20,7 @@ $app->get('/nuke', function() use ($app) {
     //add some records
     R::nuke(); // blows up existing DB
 
-    $team = R::dispense('peer');
-    $team->user_id="U123";
-    $team->handle="eddie.webb";
-    $cheers = R::dispense('cheer');
-    $cheers->reason="Being Awesome";
-    $cheers->from="U234";
-    $team->ownSudsList[] = $cheers;    
-    $id = R::store($team);
 
-
-
-
-
-    $team = R::dispense('peer');
-    $team->user_id="U234";
-    $team->handle="ali.ren";
-    $cheers = R::dispense('cheer');
-    $cheers->reason="Being Awesome";
-    $cheers->from="U123";
-    $team->ownSudsList[] = $cheers; 
-    $cheers = R::dispense('cheer');
-    $cheers->reason="Being Awesome";
-    $cheers->from="U123";
-    $team->ownSudsList[] = $cheers; 
-    $id = R::store($team);
 
 
     $app->flash('success', "Kaboom!!!! All peers nuked!");

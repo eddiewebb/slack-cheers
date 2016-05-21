@@ -9,7 +9,7 @@
 require dirname(__FILE__).'/../src/DatabaseUrlParser.php';
 require dirname(__FILE__).'/../vendor/autoload.php';
 require dirname(__FILE__).'/../lib/rb.php';
-require dirname(__FILE__).'/../src/models/repositories/RedBeanPeerRepository.php';
+require dirname(__FILE__).'/../src/autoload.php';
 
 //let's grab a DB through ORM tool redbean
 if (array_key_exists('DATABASE_URL', $_ENV)) {
@@ -27,6 +27,9 @@ if (array_key_exists('DATABASE_URL', $_ENV)) {
    error_log("NO DATABASE_URL defined by environment - running in DEVMODE with local DB");	
     R::setup();
 }
+
+
+
 
 $peerRepo = new RedBeanPeerRepository();
 

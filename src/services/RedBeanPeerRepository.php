@@ -1,7 +1,6 @@
 <?php
 
 
-require dirname(__FILE__).'/PeerRepositoryInterface.php';
 
 class RedBeanPeerRepository implements PeerRepositoryInterface
 {

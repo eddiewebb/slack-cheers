@@ -7,6 +7,7 @@
 // a group  makes the url /api/* for the nested methods
 $app->group('/api', function () use ($app, $peerRepo) {
 
+
     $app->group('/peers', function () use ($app, $peerRepo) {
 
         // get listing of all peer
@@ -67,10 +68,10 @@ $app->group('/api', function () use ($app, $peerRepo) {
                     $peer->handle = $peerName;
                     $peer->user_id = findIdForHandle($peerName);
                 }
-                $suds = R::dispense('sud');
-                $suds->reason = $arguments->reason;
-                $suds->from = $fromId;
-                $peer->ownSudsList[] = $suds; 
+                $cheers = R::dispense('cheer');
+                $cheers->reason = $arguments->reason;
+                $cheers->from = $fromId;
+                $peer->ownCheersList[] = $cheers; 
                 R::store($peer);
 
 

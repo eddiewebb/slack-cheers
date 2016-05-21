@@ -4,7 +4,7 @@
 //TODO: see http://www.redbeanphp.com/index.php?p=/models to implement as rb model with validation.
 
 
-class Peer extends \RedBeanPHP\SimpleModel{
+class Cheer extends \RedBeanPHP\SimpleModel{
         public function open() {
            error_log("called open: ".$this->id);
         }
