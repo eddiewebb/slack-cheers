@@ -20,8 +20,26 @@ $app->get('/nuke', function() use ($app) {
     //add some records
     R::nuke(); // blows up existing DB
 
+    //redbean onsome mysql wants to treat this as an integer, dforce schema and lock it.
+    // don't be fooled, there is no way to define schema I can see, so we use the String 'string' to avoid int fields
+    $peer = R::dispense('peer');
+    $peer->slackid = "string";
+    $peer->handle = "string";
+
+    $cheers = R::dispense('cheer');
+    $cheers->reason = "string";
+    $cheers->from = "string";
+    $peer->ownCheersList[] = $cheers; 
+    R::store($peer);
 
 
+
+    R::store($peer);
+    R::wipe( 'peer' );
+
+
+
+    R::freeze( TRUE );
 
     $app->flash('success', "Kaboom!!!! All peers nuked!");
     $app->redirect($app->urlFor('report'));
