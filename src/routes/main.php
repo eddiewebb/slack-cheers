@@ -32,12 +32,8 @@ $app->get('/nuke', function() use ($app) {
     $peer->ownCheersList[] = $cheers; 
     R::store($peer);
 
-
-
     R::store($peer);
     R::wipe( );
-
-
 
     R::freeze( TRUE );
 
