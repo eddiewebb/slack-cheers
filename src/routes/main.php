@@ -33,7 +33,7 @@ $app->get('/nuke', function() use ($app) {
     R::store($peer);
 
     R::store($peer);
-    R::wipe( );
+    R::trash($peer);
 
     R::freeze( TRUE );
 
