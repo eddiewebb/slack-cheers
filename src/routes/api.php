@@ -38,6 +38,8 @@ $app->group('/api', function () use ($app, $peerRepo) {
 
         // get listing of all peer
         $app->post('/', function() use ($app){
+
+
              $fromId = $app->request->post('user_id');
              $fromHandle = $app->request->post('user_name');
              $text = $app->request->post('text');
@@ -63,10 +65,6 @@ $app->group('/api', function () use ($app, $peerRepo) {
 
 
 
-
-function findIdForHandle($handle){
-    return 'UNKNOWN';
-}
 
 function slackError($app,$message){
     $response='{"text":  "Whoops: ' . $message . '"}';
