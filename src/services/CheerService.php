@@ -67,7 +67,7 @@ class CheerService{
 
 	function updateNominatorInfo(){
 		//look up by slack ID first, in case we need to updte by  name
-		$nominator = R::findOne('peer','user_id = ?', [$this->fromId]);
+		$nominator = R::findOne('peer','slackid = ?', [$this->fromId]);
 		if (empty($nominator)){
 			//else try to find by user name based on previous recognitions to provide ID
 			$nominator = R::findOne('peer','handle = ?', [$this->fromHandle]);
@@ -75,7 +75,7 @@ class CheerService{
 				$nominator=R::dispense('peer');
 		    }   
 		}
-		$nominator->user_id = $this->fromId;
+		$nominator->slackid = $this->fromId;
 		$nominator->handle = $this->fromHandle;
 		
 		R::store($nominator);
