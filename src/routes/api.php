@@ -41,48 +41,14 @@ $app->group('/api', function () use ($app, $peerRepo) {
              $fromId = $app->request->post('user_id');
              $fromHandle = $app->request->post('user_name');
              $text = $app->request->post('text');
-             if(strpos($text,"@") === false){
-                slackError($app,"No peers specified, see help");
+           
+
+             $cheerService = new CheerService($fromId, $fromHandle, $text, $app);
+             if(isset($cheerService->errorMessage)){
+                slackError($app,$cheerService->errorMessage);
              }else{
-                $arguments = parseArguments($text);
+                $response = $cheerService->createCheerResponseFromSlackCommand();
              }
-
-
-             $response = new stdClass();
-             $response->response_type = "in_channel";
-
-             foreach($arguments->peers as $mention){
-                if(strpos($mention, '@') === false){
-                    //TODO: Use lookup with slack to validate user and get name.
-                    continue;
-                }
-                $peerName = str_replace('@', '', $mention);
-                if( $peerName == $fromHandle ){
-                    slackError($app,"Way to recognize yourself. No points awarded.");
-                }
-
-                $peer = R::findOne('peer','handle = ?', [$peerName]);
-                if (empty($peer)){
-                    //first nomination, create
-                    $peer=R::dispense('peer');
-                    $peer->handle = $peerName;
-                    $peer->user_id = findIdForHandle($peerName);
-                }
-                $cheers = R::dispense('cheer');
-                $cheers->reason = $arguments->reason;
-                $cheers->from = $fromId;
-                $peer->ownCheersList[] = $cheers; 
-                R::store($peer);
-
-
-                 $detail = new stdClass();
-                 $detail->text = "Way to go " . $mention . " for: " . $arguments->reason;
-                 $response->attachments[] = $detail;
-                 $response->text = "See " . $app->request->getUrl() . $app->urlFor('report') . " report for full details.";
-             }
-
-
-
 
              $json = json_encode($response);
              $app->response->headers->set('Content-Type', 'application/json');
@@ -96,17 +62,6 @@ $app->group('/api', function () use ($app, $peerRepo) {
 }); //end api group
 
 
-function parseArguments($text){
-    $arguments = new stdClass();
-    $tokens = explode('|', $text);
-    if(sizeof($tokens) > 1){
-        $arguments->reason = $tokens[1];
-    }else{
-        $arguments->reason = "Being Awesome";
-    }
-    $arguments->peers = explode(" ", trim($tokens[0]));
-    return $arguments;
-}
 
 
 function findIdForHandle($handle){
