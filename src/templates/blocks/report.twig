@@ -9,7 +9,7 @@
    <table><thead>
       <tr><th>Peer ID</th><th>Peer Handle</th><th>Cheers Count</th></tr> </thead>               
       {% for peer in peers %}                
-            <tr><td><a href="{{ urlFor('api.user',{'id':peer.id}) }}">{{peer.slackid}}</a></td><td>{{peer.handle}}</td><td>{{peer.countOwn('cheer')}}</td></tr>
+            <tr><td>{% if peer.slackid %}<a href="{{ urlFor('api.user',{'id':peer.id}) }}">{{peer.slackid}}</a>{% else %}Send a cheers to someone else to see your info!{% endif %}</td><td>{{peer.handle}}</td><td>{{peer.countOwn('cheer')}}</td></tr>
       {% endfor %}                
     </table>
 

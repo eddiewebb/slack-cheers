@@ -30,8 +30,9 @@ if (array_key_exists('DATABASE_URL', $_ENV)) {
 
 
 
-
+//passed to $app routes
 $peerRepo = new RedBeanPeerRepository();
+$goodyRepo = new RedBeanGoodyRepository();
 
 
 //initialize slim and configure to use Twig for rendering

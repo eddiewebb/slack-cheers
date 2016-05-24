@@ -8,7 +8,7 @@ class RedBeanPeerRepository implements PeerRepositoryInterface
 
     public function find($id)
     {
-        return R::findOne('peer',$id);
+        return R::load('peer',$id);
     }
 
     public function findAll()
