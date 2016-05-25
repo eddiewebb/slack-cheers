@@ -52,6 +52,7 @@ class CheerService{
 			$cheers->reason = $this->arguments->reason;
 			$cheers->from = $this->fromId;
 			$peer->ownCheersList[] = $cheers; 
+			$peer->unspentCheers += 1;
 			R::store($peer);
 
 

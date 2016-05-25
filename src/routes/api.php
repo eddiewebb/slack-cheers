@@ -5,26 +5,52 @@
 */
 
 // a group  makes the url /api/* for the nested methods
-$app->group('/api', function () use ($app, $peerRepo, $goodyRepo) {
+$app->group('/api', function () use ($app) {
 
+    if( stripos($app->request->getPathInfo(),"/api")){
+        $app->response->headers->set('Content-Type', 'application/json');
+    }
 
-    $app->group('/peers', function () use ($app, $peerRepo) {
+    $app->get('/', function() use ($app){
+        $json = '{"apis":[
+                        {"name":"Peers","description":"The people in your team",
+                        "url":"' 
+                            .  $app->request->getUrl()  .  $app->urlFor('api.peers')
+                        . '"},
+                        '/* {"name":"Cheers","description":"cheer history",
+                         "url":"' 
+                            .  $app->request->getUrl()   .  $app->urlFor('api.cheers')
+                        . '},
+                        */. '
+                        {"name":"Goodies","description":"Listing of available goodies",
+                        "url":"'
+                            .  $app->request->getUrl()   .  $app->urlFor('api.goodys')
+                        . '"},
+                        {"name":"Redeem","description":"Trade your cheers for swaq, gift cards and more!",
+                        "url":"' 
+                            .  $app->request->getUrl()   .  $app->urlFor('api.trades')
+                        . '"}
+                ]}';
+                echo $json;    
+    })->name('api');
+
+    $app->group('/peers', function () use ($app) {
+
+        $peerRepo = new RedBeanPeerRepository();
 
         // get listing of all peer
         $app->get('/', function() use ($app, $peerRepo){
              $peers = $peerRepo->findAll();
              $json = $peerRepo->asJson($peers);
-             $app->response->headers->set('Content-Type', 'application/json');
-             echo '{"peers":'.$json.'}';
-        });
+                          echo '{"peers":'.$json.'}';
+        })->name('api.peers');
 
         
         $app->get('/:id', function($id) use ($app, $peerRepo){
             $peer = $peerRepo->find($id);
             if($peer->id){
                 $json = $peerRepo->asJson($peer);
-                $app->response->headers->set('Content-Type', 'application/json');
-                echo $json;
+                                echo $json;
             }else{
                  $app->notFound();
             }
@@ -53,8 +79,7 @@ $app->group('/api', function () use ($app, $peerRepo, $goodyRepo) {
              }
 
              $json = json_encode($response);
-             $app->response->headers->set('Content-Type', 'application/json');
-             echo $json;
+                          echo $json;
 
 
         });
@@ -64,23 +89,23 @@ $app->group('/api', function () use ($app, $peerRepo, $goodyRepo) {
 
 
 
-    $app->group('/goodys', function () use ($app, $goodyRepo) {
+    $app->group('/goodys', function () use ($app) {
+
+        $goodyRepo = new RedBeanGoodyRepository();
 
         // get listing of all peer
         $app->get('/', function() use ($app, $goodyRepo){
              $goodys = $goodyRepo->findAll();
              $json = $goodyRepo->asJson($goodys);
-             $app->response->headers->set('Content-Type', 'application/json');
-             echo '{"goodys":'.$json.'}';
-        });
+                          echo '{"goodys":'.$json.'}';
+        })->name('api.goodys');
 
         
         $app->get('/:id', function($id) use ($app, $goodyRepo){
             $goody = $goodyRepo->find($id);
             if($goody->id){
                 $json = $goodyRepo->asJson($goody);
-                $app->response->headers->set('Content-Type', 'application/json');
-                echo $json;
+                                echo $json;
             }else{
                 $app->halt(404);
                 echo '{"message":"invalid ID or bad path"}';
@@ -95,8 +120,7 @@ $app->group('/api', function () use ($app, $peerRepo, $goodyRepo) {
                 $goodyService = new GoodyService($app, $goodyRepo);
                 $record = $goodyService->update($goody,$data);
                 $json = $goodyRepo->asJson($record);
-                $app->response->headers->set('Content-Type', 'application/json');
-                echo $json;           
+                                echo $json;           
             }else{
                 $app->halt(404);
                 echo '{"message":"invalid ID or bad path"}';
@@ -107,8 +131,7 @@ $app->group('/api', function () use ($app, $peerRepo, $goodyRepo) {
                 // add a new gooy
         $app->post('/', function() use ($app, $goodyRepo){
 
-            $app->response->headers->set('Content-Type', 'application/json');
-            $json = $app->request->getBody();
+                        $json = $app->request->getBody();
             $data = json_decode($json, true);        
             if( empty($data['name']) || empty($data['description']) || empty($data['cost']) ){
                 $app->halt(400,'{"message":"Must provide at least `name`, `description`, and `cost`. Optional `imgUrl`."}');
@@ -128,14 +151,73 @@ $app->group('/api', function () use ($app, $peerRepo, $goodyRepo) {
 
 
 
+    $app->group('/trades', function () use ($app) {
+
+        $tradeService = new TradeService($app);
+
+        // get listing of all peer
+        $app->get('/', function() use ($app,$tradeService){
+             $trades = $tradeService->findAll();
+             $json = $tradeService->asJson($trades);
+                          echo '{"trades":'.$json.'}';
+        })->name('api.trades');
+
+        
+        $app->get('/:id', function($id) use ($app,$tradeService){
+            $trade = $tradeService->find($id);
+            if($trade->id){
+                $json = $tradeService->asJson($trade);
+                                echo $json;
+            }else{
+                $app->halt(404);
+                echo '{"message":"invalid ID or bad path"}';
+            }
+        })->name('api.trade');
+
+        $app->put('/:id', function($id) use ($app,$tradeService){
+            $trade = $tradeService->find($id);
+            if($trade->id){
+                $json = $app->request->getBody();
+                $data = json_decode($json, true);        
+                $record = $tradeService->update($trade,$data);
+                $json = $tradeService->asJson($record);
+                                echo $json;           
+            }else{
+                $app->halt(404);
+                echo '{"message":"invalid ID or bad path"}';
+            }
+        });
+
+                // add a new gooy
+        $app->post('/', function() use ($app,$tradeService){
+
+            $json = $app->request->getBody();
+            $data = json_decode($json, true);        
+            if( empty($data['user_id']) || empty($data['goody_id'])  ){
+                $app->halt(400,'{"message":"Must provide at least `user_id` and `goody_id`"}');
+            }
+            $record = $tradeService->add($data['user_id'],$data['goody_id']);
+            if( ! empty($record->id)){
+                $json = $tradeService->asJson($record);
+                echo $json;
+            }else{
+                $app->halt(500,$record);
+            }
+        });
+
+
+    }); // end teams group
+
+
+
 }); //end api group
+
 
 
 
 
 function slackError($app,$message){
     $response='{"text":  "Whoops: ' . $message . '"}';
-    $app->response->headers->set('Content-Type', 'application/json');
     echo $response;
     die();
 }

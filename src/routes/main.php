@@ -30,6 +30,7 @@ $app->get('/nuke', function() use ($app) {
     $cheers->reason = "string";
     $cheers->from = "string";
     $peer->ownCheersList[] = $cheers; 
+    $peer->unspentCheers = 1;
     R::store($peer);
 
     R::store($peer);
